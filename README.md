@@ -2,13 +2,13 @@
 Stripe payments using ajax or simple request, works well with iphone/android/json frontends 
 
 ## Ajax method
-pay_ajax.html is the ajax based implementation of stripe 
+pay_ajax.html is the ajax based implementation of stripe, run it in your browser
 
 ## Simple method
-pay.html is the simple implementation of stripe 
+pay.html is the simple implementation of stripe, run it in your browser
 
 ## Using Iphone/Android/Json fronend
-Upload code to your web server
+Upload code to your web server. 
 Create token by sending credit card info to stripe and then send customer info or product info along with token to charge.php
 
 ## How it works
