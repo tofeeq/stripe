@@ -1,11 +1,15 @@
 # Stripe payment gateway integration using stripe.js and stripe-php api
-Stripe payments using ajax or simple request
+Stripe payments using ajax or simple request, works well with iphone/android/json frontends 
 
 ## Ajax method
 pay_ajax.html is the ajax based implementation of stripe 
 
 ## Simple method
 pay.html is the simple implementation of stripe 
+
+## Using Iphone/Android/Json fronend
+Upload code to your web server
+Create token by sending credit card info to stripe and then send customer info or product info along with token to charge.php
 
 ## How it works
 pay.html or pay_ajax.html contains credit card form and stripe.js integration to send credit card info to stripe and getting token back.
