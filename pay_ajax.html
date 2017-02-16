@@ -1,7 +1,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<style>
+	.error {color: #f00;}
+	.success {color: #0f0;}
+</style>
 <form action="charge.php" method="POST" id="payment-form">
-	<span class="payment-errors"></span>
+	<div class="payment-msg"></div>
 
 	<div class="form-row">
 		<label>
@@ -51,6 +55,7 @@
 </form>
 
 
+
 <script>
 	var formId = "#payment-form";
 	//provide your public key here
@@ -61,7 +66,9 @@
 		
 		$form.submit(function(event) {
 			// Disable the submit button to prevent repeated clicks:
-			$form.find('.submit').prop('disabled', true);
+			$form.find('.submit')
+				.prop('value', 'Sending...')
+				.prop('disabled', true);
 
 			// Request a token from Stripe:
 			Stripe.card.createToken($form, stripeResponseHandler);
@@ -81,8 +88,15 @@
 		if (response.error) { // Problem!
 
 			// Show the errors on the form:
-			$form.find('.payment-errors').text(response.error.message);
-			$form.find('.submit').prop('disabled', false); // Re-enable submission
+			 
+			$('.payment-msg')
+				.removeClass('success')
+				.addClass('error')
+				.html(response.error.message);
+
+			$form.find('.submit')
+				.prop('value', 'Submit Payment')
+				.prop('disabled', false); // Re-enable submission
 
 		} else { // Token was created!
 
@@ -94,7 +108,44 @@
 
 			// Submit the form:
 			 
-			$form.get(0).submit();
+			$.post('charge.php', $form.serialize(), function(response) {
+					if (response.errors) {
+						
+
+						var str = "<ul>";
+						for (var i in response.errors) {
+							str += "<li>" + response.errors[i] + "</li>";
+						}
+						str += "</ul>";
+
+						$('.payment-msg')
+							.removeClass('success')
+							.addClass('error')
+							.html(str);
+
+						$form.find('.submit')
+							.prop('value', 'Submit Again')
+							.prop('disabled', false); // Re-enable submission
+
+					} else {
+
+						var str = "<ul>";
+						for (var i in response) {
+							str += "<li>" + i + ": " + response[i] + "</li>";
+						}
+						str += "</ul>";
+
+						$('.payment-msg')
+							.removeClass('error')
+							.addClass('success')
+							.html(str);
+
+						$form.find('.submit')
+						.prop('value', 'Pay Again')
+						.prop('disabled', false); // Re-enable submission	
+					}
+				}, 'json'
+			);
 		
 		}
 	};
